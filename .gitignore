@@ -1,0 +1,9 @@
+.vs/ 
+x64/ 
+Debug/ 
+*.exe 
+*.pdb 
+*.ipch 
+*.db 
+*.suo 
+*.user 
