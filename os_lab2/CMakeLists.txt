@@ -1,9 +1,12 @@
 cmake_minimum_required(VERSION 3.14)
 project(os_lab2)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} 
+    main.cpp 
+    thread_func.cpp
+)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -15,6 +18,10 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-add_executable(tests tests.cpp)
+add_executable(tests 
+    tests.cpp 
+    thread_func.cpp
+)
+
 target_link_libraries(tests PRIVATE gtest_main)
 add_test(NAME lab2_tests COMMAND tests)

@@ -1,39 +1,7 @@
 #include <gtest/gtest.h>
 #include <windows.h>
 #include <vector>
-#include <climits>
-
-struct ThreadData {
-    const std::vector<int>* arr;
-    int* min;
-    int* max;
-    double* avg;
-};
-DWORD WINAPI min_max(LPVOID param) {
-    ThreadData* data = static_cast<ThreadData*>(param);
-    const std::vector<int>& arr = *data->arr;
-    int min_val = INT_MAX;
-    int max_val = INT_MIN;
-    for (size_t i = 0; i < arr.size(); i++) {
-        if (arr[i] < min_val) min_val = arr[i];
-        if (arr[i] > max_val) max_val = arr[i];
-        Sleep(7);
-    }
-    *data->min = min_val;
-    *data->max = max_val;
-    return 0;
-}
-DWORD WINAPI average(LPVOID param) {
-    ThreadData* data = static_cast<ThreadData*>(param);
-    const std::vector<int>& arr = *data->arr;
-    int sum = 0;
-    for (size_t i = 0; i < arr.size(); i++) {
-        sum += arr[i];
-        Sleep(12);
-    }
-    *data->avg = static_cast<double>(sum) / arr.size();
-    return 0;
-}
+#include "thread_func.h"
 
 TEST(ThreadTest, MinMaxTest) {
     std::vector<int> arr = { 5, 2, 8, 1, 9 };
@@ -67,8 +35,8 @@ TEST(ThreadTest, BothThreadsTest) {
     HANDLE h2 = CreateThread(NULL, 0, average, &data, 0, NULL);
     WaitForSingleObject(h1, INFINITE);
     WaitForSingleObject(h2, INFINITE);
-    CloseHandle(h1);
     CloseHandle(h2);
+    CloseHandle(h1);
     EXPECT_EQ(min_val, 2);
     EXPECT_EQ(max_val, 9);
     EXPECT_DOUBLE_EQ(avg_val, 5.2);
